@@ -20,6 +20,9 @@ IF NOT EXIST server\build (
 go build -o \build\educado.exe -ldflags "-X main.Version=%VERSION% -X main.Build=%BUILD% -X main.GitHash=%GITHASH%"
 
 copy ..\..\.env server\build\
+copy ..\..\gcp_credentials.json \build\
+
+
 
 echo Built version %VERSION% (Build %BUILD%) and copied .env to server\build\
 
