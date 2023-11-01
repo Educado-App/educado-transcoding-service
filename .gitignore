@@ -2,3 +2,4 @@
 .env
 .idea/*
 cmd/server/build/*
+gcp_credentials.json
