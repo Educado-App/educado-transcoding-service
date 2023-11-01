@@ -11,11 +11,11 @@ GITHASH=$(git rev-parse --short HEAD)
 mkdir -p server/build
 
 # Build the application with the version and build number
-go build -o /build/educado.out -ldflags "-X main.Version=$VERSION -X main.Build=$BUILD -X main.GitHash=$GITHASH"
+go build -o server/build/educado.out -ldflags "-X main.Version=$VERSION -X main.Build=$BUILD -X main.GitHash=$GITHASH"
 
 # Copy the .env file to the build directory
-cp ../../.env /build/
-cp ../../gcp_credentials.json /build/
+cp ../../.env server/build/
+cp ../../gcp_credentials.json server/build/
 
 
 echo "Built version $VERSION (Build $BUILD) and copied .env to server/build/"
