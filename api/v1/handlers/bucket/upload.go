@@ -16,6 +16,9 @@ func UploadFile(c *fiber.Ctx) error {
 
 	// Get the filename from the formdata "filename" key
 	filename := c.FormValue("filename")
+	if filename == "" {
+		return c.Status(fiber.StatusBadRequest).SendString("Upload request does not contain a filename")
+	}
 
 	// Open the file
 	fileData, err := file.Open()
