@@ -18,7 +18,7 @@ var (
 func main() {
 	app := fiber.New(fiber.Config{
 		AppName:      "transcoder-service",
-		ServerHeader: "Edudcado/transcoder-service/" + Version + " (Build " + Build + ")",
+		ServerHeader: "Educado/transcoder-service/" + Version + " (Build " + Build + ")",
 	})
 
 	files, err := gcp.Service.ListFiles()
