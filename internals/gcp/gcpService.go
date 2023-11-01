@@ -55,3 +55,12 @@ func (s *GCPService) DownloadFile(fileName string) ([]byte, error) {
 	}
 	return content, nil
 }
+
+func (s *GCPService) UploadFile(fileName string, content []byte) error {
+	var writer = s.client.Bucket(s.bucketName).Object(fileName).NewWriter(s.context)
+	defer writer.Close()
+	if _, err := writer.Write(content); err != nil {
+		return err
+	}
+	return nil
+}
