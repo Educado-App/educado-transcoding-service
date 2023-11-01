@@ -42,3 +42,16 @@ func (s *GCPService) ListFiles() ([]string, error) {
 	}
 	return files, nil
 }
+
+func (s *GCPService) DownloadFile(fileName string) ([]byte, error) {
+	var reader, err = s.client.Bucket(s.bucketName).Object(fileName).NewReader(s.context)
+	if err != nil {
+		return nil, err
+	}
+	defer reader.Close()
+	var content = make([]byte, reader.Attrs.Size)
+	if _, err := reader.Read(content); err != nil {
+		return nil, err
+	}
+	return content, nil
+}
