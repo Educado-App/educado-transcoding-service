@@ -1,1 +1,0 @@
-# educado-transcoding-service
