@@ -13,7 +13,7 @@ func DownloadFile(c *fiber.Ctx) error {
 	// Download file from GCP
 	var file, err = gcp.Service.DownloadFile(filename)
 	if err != nil {
-		return c.SendString(err.Error())
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
 
 	// Encode file to base64 for frontend
