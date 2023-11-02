@@ -7,5 +7,5 @@ import (
 
 func setupTranscoderRoutes(app *fiber.App) {
 	transcoder := app.Group("/transcoder")
-	transcoder.Post("/transcode", handlers.Transcode)
+	transcoder.Post("/", handlers.Transcode)
 }
