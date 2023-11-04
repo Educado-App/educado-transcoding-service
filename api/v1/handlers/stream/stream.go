@@ -7,21 +7,31 @@ import (
 )
 
 func Stream(c *fiber.Ctx) error {
-	// Get fileName from URL
 	fileName := c.Params("fileName")
 
+	// Get the file attributes to check the Content-Type
+	attrs, err := gcp.Service.Attributes(fileName)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+	}
+
+	// Check if the Content-Type is "video/mp4"
+	if attrs.ContentType != "video/mp4" {
+		return c.Status(fiber.StatusBadRequest).SendString("File is not an MP4 video")
+	}
+
 	// Create reader for file
-	var reader, err = gcp.Service.Reader(fileName)
+	reader, err := gcp.Service.Reader(fileName)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
 	defer reader.Close()
 
-	// Set the Content-Type header
-	c.Set("Content-Type", "video/mp4")
+	// Set the Content-Type header for the response
+	c.Set("Content-Type", attrs.ContentType)
 
 	// Stream file to client
-	if _, err := io.Copy(c, reader); err != nil {
+	if _, err := io.Copy(c.Response().BodyWriter(), reader); err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
 
