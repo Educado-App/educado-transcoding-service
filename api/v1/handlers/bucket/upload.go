@@ -23,18 +23,10 @@ func UploadFile(c *fiber.Ctx) error {
 	// Check if file is of the allowed types
 	imageTypes := []string{"image/jpeg", "image/jpg", "image/png"}
 	videoTypes := []string{"video/mp4"}
-	isVideo := false
 	if !contains(imageTypes, file.Header.Get("Content-Type")) {
 		if !contains(videoTypes, file.Header.Get("Content-Type")) {
 			return c.Status(fiber.StatusBadRequest).SendString("File type not allowed")
 		}
-		isVideo = true
-	}
-
-	if isVideo {
-		println("Video file")
-	} else {
-		println("Image file")
 	}
 
 	// Open the file

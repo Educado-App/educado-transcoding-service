@@ -64,3 +64,11 @@ func (s *GCPService) UploadFile(fileName string, content []byte) error {
 	}
 	return nil
 }
+
+func (s *GCPService) DeleteFile(fileName string) error {
+	var err = s.client.Bucket(s.bucketName).Object(fileName).Delete(s.context)
+	if err != nil {
+		return err
+	}
+	return nil
+}

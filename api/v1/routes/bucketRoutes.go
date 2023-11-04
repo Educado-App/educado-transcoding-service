@@ -8,6 +8,7 @@ import (
 func setupBucketRoutes(app *fiber.App) {
 	bucket := app.Group("/bucket")
 	bucket.Get("/", handlers.ListBucket)
-	bucket.Get("/:fileName", handlers.DownloadFile)
 	bucket.Post("/", handlers.UploadFile)
+	bucket.Get("/:fileName", handlers.DownloadFile)
+	bucket.Delete("/:fileName", handlers.DeleteFile)
 }

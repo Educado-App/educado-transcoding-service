@@ -7,5 +7,5 @@ import (
 
 func setupStreamRoutes(app *fiber.App) {
 	bucket := app.Group("/stream")
-	bucket.Get("/", handlers.Stream)
+	bucket.Get("/:fileName", handlers.Stream)
 }

@@ -17,6 +17,7 @@ func main() {
 	app := fiber.New(fiber.Config{
 		AppName:      "transcoder-service",
 		ServerHeader: "Educado/transcoder-service/" + Version + " (Build " + Build + ")",
+		BodyLimit:    10 * 1024 * 1024, // 10MB
 	})
 
 	//TODO: Add DB Inits
