@@ -72,3 +72,12 @@ func (s *GCPService) DeleteFile(fileName string) error {
 	}
 	return nil
 }
+
+// Reader for file
+func (s *GCPService) Reader(fileName string) (*storage.Reader, error) {
+	var reader, err = s.client.Bucket(s.bucketName).Object(fileName).NewReader(s.context)
+	if err != nil {
+		return nil, err
+	}
+	return reader, nil
+}
