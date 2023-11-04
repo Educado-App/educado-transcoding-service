@@ -15,9 +15,26 @@ func UploadFile(c *fiber.Ctx) error {
 	}
 
 	// Get the filename from the formdata "filename" key
-	filename := c.FormValue("filename")
+	filename := c.FormValue("fileName")
 	if filename == "" {
-		return c.Status(fiber.StatusBadRequest).SendString("Upload request does not contain a filename")
+		return c.Status(fiber.StatusBadRequest).SendString("Upload request does not contain a fileName")
+	}
+
+	// Check if file is of the allowed types
+	imageTypes := []string{"image/jpeg", "image/jpg", "image/png"}
+	videoTypes := []string{"video/mp4"}
+	isVideo := false
+	if !contains(imageTypes, file.Header.Get("Content-Type")) {
+		if !contains(videoTypes, file.Header.Get("Content-Type")) {
+			return c.Status(fiber.StatusBadRequest).SendString("File type not allowed")
+		}
+		isVideo = true
+	}
+
+	if isVideo {
+		println("Video file")
+	} else {
+		println("Image file")
 	}
 
 	// Open the file
@@ -41,4 +58,14 @@ func UploadFile(c *fiber.Ctx) error {
 
 	// Return success message
 	return c.SendString(fmt.Sprintf("File %s uploaded successfully", filename))
+}
+
+// Check if a string is in a slice of strings
+func contains(types []string, get string) bool {
+	for _, t := range types {
+		if t == get {
+			return true
+		}
+	}
+	return false
 }
