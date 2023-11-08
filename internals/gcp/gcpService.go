@@ -4,6 +4,7 @@ import (
 	"cloud.google.com/go/storage"
 	"context"
 	"google.golang.org/api/iterator"
+	"io"
 )
 
 var Service = newGCPService()
@@ -49,8 +50,8 @@ func (s *GCPService) DownloadFile(fileName string) ([]byte, error) {
 		return nil, err
 	}
 	defer reader.Close()
-	var content = make([]byte, reader.Attrs.Size)
-	if _, err := reader.Read(content); err != nil {
+	content, err := io.ReadAll(reader)
+	if err != nil {
 		return nil, err
 	}
 	return content, nil
