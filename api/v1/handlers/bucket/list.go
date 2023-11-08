@@ -9,6 +9,7 @@ func ListBucket(c *fiber.Ctx) error {
 
 	// List files from GCP
 	var list, err = gcp.Service.ListFiles()
+
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
