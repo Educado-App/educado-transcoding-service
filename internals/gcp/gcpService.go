@@ -42,3 +42,49 @@ func (s *GCPService) ListFiles() ([]string, error) {
 	}
 	return files, nil
 }
+
+func (s *GCPService) DownloadFile(fileName string) ([]byte, error) {
+	var reader, err = s.client.Bucket(s.bucketName).Object(fileName).NewReader(s.context)
+	if err != nil {
+		return nil, err
+	}
+	defer reader.Close()
+	var content = make([]byte, reader.Attrs.Size)
+	if _, err := reader.Read(content); err != nil {
+		return nil, err
+	}
+	return content, nil
+}
+
+func (s *GCPService) UploadFile(fileName string, content []byte) error {
+	var writer = s.client.Bucket(s.bucketName).Object(fileName).NewWriter(s.context)
+	defer writer.Close()
+	if _, err := writer.Write(content); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *GCPService) DeleteFile(fileName string) error {
+	var err = s.client.Bucket(s.bucketName).Object(fileName).Delete(s.context)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *GCPService) Reader(fileName string) (*storage.Reader, error) {
+	var reader, err = s.client.Bucket(s.bucketName).Object(fileName).NewReader(s.context)
+	if err != nil {
+		return nil, err
+	}
+	return reader, nil
+}
+
+func (s *GCPService) Attributes(fileName string) (*storage.ObjectAttrs, error) {
+	var attrs, err = s.client.Bucket(s.bucketName).Object(fileName).Attrs(s.context)
+	if err != nil {
+		return nil, err
+	}
+	return attrs, nil
+}
