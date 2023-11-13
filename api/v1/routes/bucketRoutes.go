@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func setupBucketRoutes(app *fiber.App) {
+func setupBucketRoutes(app fiber.Router) {
 	bucket := app.Group("/bucket")
 	bucket.Get("/", handlers.ListBucket)
 	bucket.Post("/", handlers.UploadFile)

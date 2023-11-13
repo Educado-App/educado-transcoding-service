@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func setupStreamRoutes(app *fiber.App) {
+func setupStreamRoutes(app fiber.Router) {
 	bucket := app.Group("/stream")
 	bucket.Get("/:fileName", handlers.Stream)
 }

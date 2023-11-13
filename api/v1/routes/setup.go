@@ -3,9 +3,10 @@ package routes
 import "github.com/gofiber/fiber/v2"
 
 func SetupRoutes(app *fiber.App) {
-	setupBucketRoutes(app)
-	setupTranscoderRoutes(app)
-	setupStreamRoutes(app)
+	api := app.Group("/api/v1")
+	setupBucketRoutes(api)
+	setupTranscoderRoutes(api)
+	setupStreamRoutes(api)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Welcome to the Educado Transcoding API 👋!")
