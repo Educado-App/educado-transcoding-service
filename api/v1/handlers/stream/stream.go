@@ -1,4 +1,4 @@
-package bucket
+package stream
 
 import (
 	"github.com/Educado-App/educado-transcoding-service/internals/gcp"

@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func setupTranscoderRoutes(app *fiber.App) {
+func setupTranscoderRoutes(app fiber.Router) {
 	transcoder := app.Group("/transcoder")
 	transcoder.Post("/", handlers.Transcode)
 }
