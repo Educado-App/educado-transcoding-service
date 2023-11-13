@@ -8,51 +8,73 @@ import (
 )
 
 func UploadFile(c *fiber.Ctx) error {
-	// Get the file from the POST request
 	file, err := c.FormFile("file")
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString("Upload request does not contain a file")
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": fiber.Map{
+				"code":    "E0002",
+				"message": "Upload request does not contain a file",
+			},
+		})
 	}
 
-	// Get the filename from the formdata "filename" key
 	filename := c.FormValue("fileName")
 	if filename == "" {
-		return c.Status(fiber.StatusBadRequest).SendString("Upload request does not contain a fileName")
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": fiber.Map{
+				"code":    "E0003",
+				"message": "Upload request does not contain a fileName",
+			},
+		})
 	}
 
-	// Check if file is of the allowed types
-	imageTypes := []string{"image/jpeg", "image/jpg", "image/png"}
-	videoTypes := []string{"video/mp4"}
-	if !contains(imageTypes, file.Header.Get("Content-Type")) {
-		if !contains(videoTypes, file.Header.Get("Content-Type")) {
-			return c.Status(fiber.StatusBadRequest).SendString("File type not allowed")
-		}
+	allowedTypes := []string{"image/jpeg", "image/jpg", "image/png", "video/mp4"}
+	contentType := file.Header.Get("Content-Type")
+	if !contains(allowedTypes, contentType) {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": fiber.Map{
+				"code":    "E0004",
+				"message": "File type not allowed",
+			},
+		})
 	}
 
-	// Open the file
 	fileData, err := file.Open()
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString("Unable to open the file")
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": fiber.Map{
+				"code":    "E0005",
+				"message": "Unable to open the file",
+			},
+		})
 	}
 	defer fileData.Close()
 
-	// Read the content of the file
 	content, err := io.ReadAll(fileData)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString("Unable to read the file")
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": fiber.Map{
+				"code":    "E0006",
+				"message": "Unable to read the file",
+			},
+		})
 	}
 
-	// Upload the file using GCPService
 	err = gcp.Service.UploadFile(filename, content)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(fmt.Sprintf("Failed to upload the file: %v", err))
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": fiber.Map{
+				"code":    "E0007",
+				"message": fmt.Sprintf("Failed to upload the file: %v", err),
+			},
+		})
 	}
 
-	// Return success message
-	return c.SendString(fmt.Sprintf("File %s uploaded successfully", filename))
+	return c.JSON(fiber.Map{
+		"message": fmt.Sprintf("File %s uploaded successfully", filename),
+	})
 }
 
-// Check if a string is in a slice of strings
 func contains(types []string, get string) bool {
 	for _, t := range types {
 		if t == get {
