@@ -2,6 +2,9 @@ FROM golang:1.21
 
 WORKDIR /usr/src/app
 
+#Install ffmpeg
+RUN apt-get update && apt-get install -y ffmpeg
+
 # pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
