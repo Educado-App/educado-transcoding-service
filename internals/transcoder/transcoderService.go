@@ -55,7 +55,7 @@ func TranscodeAndUpload(resolutions []string, filename string, c *fiber.Ctx) err
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": fiber.Map{
-				"code":    "E0006",
+				"code":    "E0013",
 				"message": "Unable to delete the original file",
 			},
 		})
@@ -69,7 +69,7 @@ func TranscodeAndUpload(resolutions []string, filename string, c *fiber.Ctx) err
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"error": fiber.Map{
-					"code":    "E0007",
+					"code":    "E0014",
 					"message": "Unable to upload the transcoded file",
 				},
 			})
@@ -79,7 +79,7 @@ func TranscodeAndUpload(resolutions []string, filename string, c *fiber.Ctx) err
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"error": fiber.Map{
-					"code":    "E0008",
+					"code":    "E0015",
 					"message": "Unable to delete the transcoded file",
 				},
 			})
