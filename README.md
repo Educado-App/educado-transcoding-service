@@ -46,8 +46,5 @@ The service should be up and running on port 8080.
 ## API Reference
 - Description of routes (to be added)
 
-## Configuration
-- Explain how to configure the service/API (e.g., environment variables, config files).
-
 ## Acknowledgments
 - Shout out to Carl Ryskov Aagesen for being a great mentor.
