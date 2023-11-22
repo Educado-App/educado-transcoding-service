@@ -12,7 +12,7 @@ func Transcode(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": fiber.Map{
-				"code":    "E0002",
+				"code":    "E0009",
 				"message": "Upload request does not contain a file",
 			},
 		})
@@ -23,7 +23,7 @@ func Transcode(c *fiber.Ctx) error {
 	if filename == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": fiber.Map{
-				"code":    "E0003",
+				"code":    "E0010",
 				"message": "Upload request does not contain a fileName",
 			},
 		})
@@ -35,7 +35,7 @@ func Transcode(c *fiber.Ctx) error {
 	if !contains(allowedTypes, contentType) {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": fiber.Map{
-				"code":    "E0004",
+				"code":    "E0011",
 				"message": "File type not allowed",
 			},
 		})
@@ -56,18 +56,15 @@ func Transcode(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": fiber.Map{
-				"code":    "E0005",
+				"code":    "E0012",
 				"message": "Unable to save the file",
 			},
 		})
 	}
 
-	//Use ffmpeg to transcode the file into 4 different resolutions
-	resolutions := []string{"1920x1080"}
-	for _, resolution := range resolutions {
-		outputPath := "./tmp/" + filename + "_" + resolution + ".mp4"
-		go Service.TranscodeVideo("./tmp/"+filename, outputPath, resolution)
-	}
+	//Use ffmpeg to transcode the file into 4 different resolutions: 1080p, 720p, 480p, 360p (reversed resolution dimensions)
+	resolutions := []string{"360x640", "480x854", "720x1280", "1080x1920"}
+	go Service.TranscodeAndUpload(resolutions, filename, c)
 
 	//Return filename
 	return c.JSON(fiber.Map{
