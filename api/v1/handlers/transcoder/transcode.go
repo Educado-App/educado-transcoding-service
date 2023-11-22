@@ -63,7 +63,7 @@ func Transcode(c *fiber.Ctx) error {
 	}
 
 	//Use ffmpeg to transcode the file into 4 different resolutions: 1080p, 720p, 480p, 360p (reversed resolution dimensions)
-	resolutions := []string{"360x640", "480x854"}
+	resolutions := []string{"360x640", "480x854", "720x1280", "1080x1920"}
 	go Service.TranscodeAndUpload(resolutions, filename, c)
 
 	//Return filename
