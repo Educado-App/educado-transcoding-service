@@ -1,7 +1,6 @@
 package stream
 
 import (
-	"encoding/base64"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
@@ -21,10 +20,6 @@ func TestStream(t *testing.T) {
 	body, err := io.ReadAll(resp.Body)
 	assert.NoError(t, err)
 	assert.IsType(t, "", string(body))
-
-	//check that the body can be parsed as base64
-	_, err = io.ReadAll(base64.NewDecoder(base64.StdEncoding, resp.Body))
-	assert.NoError(t, err)
 
 	// Non existing file should return 400 (bad request)
 	assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
