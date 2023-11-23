@@ -12,11 +12,7 @@ func TestDownloadInvalidFile(t *testing.T) {
 	url := "http://localhost:8080/api/v1/bucket/"
 	// Make a GET request
 
-	resp, err := http.Get(url + "thisImageDoesNotExist")
-
-	//assert that there is an error
-	assert.Error(t, err)
-	assert.NotNil(t, resp)
+	resp, _ := http.Get(url + "thisImageDoesNotExist")
 
 	// Non existing file should return 500 (internal server error)
 	assert.Equal(t, http.StatusInternalServerError, resp.StatusCode)
