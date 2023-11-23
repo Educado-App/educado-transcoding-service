@@ -1,68 +1,46 @@
 package test
 
 import (
-	"github.com/Educado-App/educado-transcoding-service/api/v1/handlers/bucket"
-	"github.com/stretchr/testify/mock"
-	"net/http/httptest"
-	"testing"
-
-	"github.com/gofiber/fiber/v2"
+	"encoding/base64"
 	"github.com/stretchr/testify/assert"
+	"io"
+	"net/http"
+	"testing"
 )
 
-// MockGCPService is a mock of the GCP service
-type MockGCPService struct {
-	mock.Mock
+func TestDownloadInvalidFile(t *testing.T) {
+	url := "http://localhost:8080/api/v1/bucket/"
+	// Make a GET request
+
+	resp, err := http.Get(url + "thisImageDoesNotExist")
+
+	//assert that there is an error
+	assert.Error(t, err)
+	assert.NotNil(t, resp)
+
+	// Non existing file should return 500 (internal server error)
+	assert.Equal(t, http.StatusInternalServerError, resp.StatusCode)
 }
 
-func (m *MockGCPService) DownloadFile(filename string) ([]byte, error) {
-	args := m.Called(filename)
-	return args.Get(0).([]byte), args.Error(1)
-}
+func TestDownloadValidFile(t *testing.T) {
+	url := "http://localhost:8080/api/v1/bucket/"
+	// Make a GET request
 
-func DeleteFileTest(t *testing.T) {
+	resp, err := http.Get(url + "test")
 
-}
+	//assert that there is an error
+	assert.NoError(t, err)
+	assert.NotNil(t, resp)
 
-func DownloadFileTest(t *testing.T) {
-	// Initialize Fiber app
-	app := fiber.New()
-	app.Get("/:fileName", bucket.DownloadFile)
+	//read body and check if it is a string
+	body, err := io.ReadAll(resp.Body)
+	assert.NoError(t, err)
+	assert.IsType(t, "", string(body))
 
-	// Define test cases
-	tests := []struct {
-		description    string
-		route          string
-		expectedStatus int
-	}{
-		{
-			description:    "File exists",
-			route:          "/existing-file.txt",
-			expectedStatus: fiber.StatusOK,
-		},
-		{
-			description:    "File does not exist",
-			route:          "/nonexistent-file.txt",
-			expectedStatus: fiber.StatusInternalServerError,
-		},
-	}
+	//check that the body can be parsed as base64
+	_, err = io.ReadAll(base64.NewDecoder(base64.StdEncoding, resp.Body))
+	assert.NoError(t, err)
 
-	// Run the tests
-	for _, test := range tests {
-		t.Run(test.description, func(t *testing.T) {
-			req := httptest.NewRequest("GET", test.route, nil)
-			resp, err := app.Test(req, -1)
-
-			assert.NoError(t, err)
-			assert.Equal(t, test.expectedStatus, resp.StatusCode)
-		})
-	}
-}
-
-func ListFileTest(t *testing.T) {
-
-}
-
-func UploadFileTest(t *testing.T) {
-
+	// Non existing file should return 500 (internal server error)
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
 }
