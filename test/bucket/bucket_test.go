@@ -1,4 +1,4 @@
-package test
+package bucket
 
 import (
 	"encoding/base64"
