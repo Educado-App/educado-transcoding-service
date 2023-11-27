@@ -38,7 +38,7 @@ func TestDownloadValidFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Non existing file should return 500 (internal server error)
-	assert.Equal(t, http.StatusOK, resp.StatusCode)
+	assert.Equal(t, http.StatusInternalServerError, resp.StatusCode)
 }
 
 func TestListBucket(t *testing.T) {

@@ -21,6 +21,6 @@ func TestStream(t *testing.T) {
 	assert.NoError(t, err)
 	assert.IsType(t, "", string(body))
 
-	// Non existing file should return 400 (bad request)
-	assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
+	// Non existing file should return 500 (internal server error)
+	assert.Equal(t, http.StatusInternalServerError, resp.StatusCode)
 }
