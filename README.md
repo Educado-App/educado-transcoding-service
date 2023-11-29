@@ -2,6 +2,9 @@
 
 ## Overview
 This service is responsible for handling GCP trafic (uploading, downloading, etc.), transcoding and streaming.
+The staging and main branches are deployed to GCP Cloud Run.
+- Staging: https://video-service-staging-x7rgvjso4a-ew.a.run.app/
+- Main: https://video-service-x7rgvjso4a-ew.a.run.app/
 
 ## Getting Started
 
@@ -45,6 +48,9 @@ The service should be up and running on port 8080.
 
 ## API Reference
 - Description of routes (to be added)
+
+## Known Issues
+- For some reason the service cannot transcode when deployed to GCP. It works fine locally, both containerized and not containerized.
 
 ## Acknowledgments
 - Shout out to Carl Ryskov Aagesen for being a great mentor.
