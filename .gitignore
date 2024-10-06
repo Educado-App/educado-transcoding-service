@@ -6,3 +6,4 @@ gcp_credentials.json
 .DS_Store
 educado.out
 ./tmp/**
+config/gcp_service.json

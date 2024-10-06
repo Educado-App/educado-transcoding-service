@@ -1,10 +1,11 @@
 package gcp
 
 import (
-	"cloud.google.com/go/storage"
 	"context"
-	"google.golang.org/api/iterator"
 	"io"
+
+	"cloud.google.com/go/storage"
+	"google.golang.org/api/iterator"
 )
 
 var Service = newGCPService()
@@ -55,6 +56,14 @@ func (s *GCPService) DownloadFile(fileName string) ([]byte, error) {
 		return nil, err
 	}
 	return content, nil
+}
+
+func (s *GCPService) GetFileAttributes(fileName string) (*storage.ObjectAttrs, error) {
+    attrs, err := s.client.Bucket(s.bucketName).Object(fileName).Attrs(s.context)
+    if err != nil {
+        return nil, err
+    }
+    return attrs, nil
 }
 
 func (s *GCPService) UploadFile(fileName string, content []byte) error {
